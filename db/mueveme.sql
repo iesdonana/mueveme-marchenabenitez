@@ -59,3 +59,4 @@ CREATE TABLE movimientos
     usuario_id BIGINT REFERENCES usuarios(id)
   , noticia_id BIGINT REFERENCES noticias(id)
   , PRIMARY KEY(usuario_id, noticia_id)
+);
