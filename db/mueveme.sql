@@ -35,11 +35,12 @@ DROP TABLE IF EXISTS comentarios CASCADE;
 
 CREATE TABLE comentarios
 (
-    id         BIGSERIAL PRIMARY KEY
-  , comentario TEXT      NOT NULL
-  , usuario_id BIGINT    NOT NULL REFERENCES usuarios(id)
-  , noticia_id BIGINT    NOT NULL REFERENCES noticias(id)
-  , created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id            BIGSERIAL PRIMARY KEY
+  , comentario    TEXT      NOT NULL
+  , usuario_id    BIGINT    NOT NULL REFERENCES usuarios(id)
+  , noticia_id    BIGINT    NOT NULL REFERENCES noticias(id)
+  , comentario_id BIGINT    REFERENCES comentarios(id)
+  , created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS votos CASCADE;
@@ -48,7 +49,7 @@ CREATE TABLE votos
 (
     usuario_id    BIGINT REFERENCES usuarios(id)
   , comentario_id BIGINT REFERENCES comentarios(id)
-  , voto      BOOL   NOT NULL
+  , voto          BOOL   NOT NULL
   , PRIMARY KEY(usuario_id, comentario_id)
 );
 
