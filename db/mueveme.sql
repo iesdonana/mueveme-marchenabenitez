@@ -41,3 +41,21 @@ CREATE TABLE comentarios
   , noticia_id BIGINT    NOT NULL REFERENCES noticias(id)
   , created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+DROP TABLE IF EXISTS votos CASCADE;
+
+CREATE TABLE votos
+(
+    usuario_id    BIGINT REFERENCES usuarios(id)
+  , comentario_id BIGINT REFERENCES comentarios(id)
+  , voto      BOOL   NOT NULL
+  , PRIMARY KEY(usuario_id, comentario_id)
+);
+
+DROP TABLE IF EXISTS movimientos CASCADE;
+
+CREATE TABLE movimientos
+(
+    usuario_id BIGINT REFERENCES usuarios(id)
+  , noticia_id BIGINT REFERENCES noticias(id)
+  , PRIMARY KEY(usuario_id, noticia_id)
