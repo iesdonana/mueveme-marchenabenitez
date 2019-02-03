@@ -12,17 +12,20 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'titulo')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'titulo')->textInput(['maxlength' => true])->label('Título') ?>
 
-    <?= $form->field($model, 'noticia')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'noticia')->textarea(['rows' => 6])->label('Descripción') ?>
 
-    <?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'link')->textInput(['maxlength' => true])->label('URL') ?>
 
-    <?= $form->field($model, 'usuario_id')->textInput() ?>
-
-    <?= $form->field($model, 'categoria_id')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
+    <?= $form->field($model, 'categoria_id')
+             ->dropDownList(\app\models\Categorias::find()
+             ->select('categoria')->indexBy('id')->column(),
+             [
+                 'prompt' => 'Seleccione la categoría'
+             ])
+             ->label('Categoría')
+    ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

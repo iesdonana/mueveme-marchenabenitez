@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Noticias;
 use app\models\NoticiasSearch;
 use Yii;
+use yii\db\Expression;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -76,6 +77,9 @@ class NoticiasController extends Controller
     public function actionCreate()
     {
         $model = new Noticias();
+
+        $model->usuario_id = Yii::$app->user->id;
+        $model->created_at = new Expression('NOW()');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
