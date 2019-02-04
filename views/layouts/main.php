@@ -39,21 +39,25 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Crear Usuario', 'url' => ['usuarios/create']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                '<li>'.
+                    Html::a('Registrar usuario', ['usuarios/create'], ['class' => 'btn btn-link']) .
+                '</li>'.
+                '<li>' .
+                    Html::a('Login', ['/site/login'], ['class' => 'btn btn-link']) .
+                '</li>'
             ) : (
                 '<li>'.
-                    Html::a('Modificar datos', ['usuarios/update', 'id' => Yii::$app->user->id], ['class' => 'btn btn-link'])
-                . '</li>' .
+                    Html::a('Modificar datos', ['usuarios/update', 'id' => Yii::$app->user->id], ['class' => 'btn btn-link']) .
+                '</li>' .
                 '<li>'.
-                Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->nombre . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
+                    Html::beginForm(['/site/logout'], 'post') .
+                        Html::submitButton(
+                            'Logout (' . Yii::$app->user->identity->nombre . ')',
+                            ['class' => 'btn btn-link logout']
+                        ) .
+                    Html::endForm() .
+                '</li>'
             )
         ],
     ]);
