@@ -47,17 +47,30 @@ AppAsset::register($this);
                     Html::a('Login', ['/site/login'], ['class' => 'btn btn-link']) .
                 '</li>'
             ) : (
-                '<li>'.
-                    Html::a('Modificar datos', ['usuarios/update', 'id' => Yii::$app->user->id], ['class' => 'btn btn-link']) .
-                '</li>' .
-                '<li>'.
-                    Html::beginForm(['/site/logout'], 'post') .
-                        Html::submitButton(
-                            'Logout (' . Yii::$app->user->identity->nombre . ')',
-                            ['class' => 'btn btn-link logout']
-                        ) .
-                    Html::endForm() .
-                '</li>'
+                '<li class="dropdown">' .
+                    Html::a('Usuario (' . Yii::$app->user->identity->nombre . ') <span class="caret"></span>',
+                    [''],
+                    [
+                        'class' => 'dropdown-toggle',
+                        'data-toggle'=>'dropdown',
+                        'role'=>'button',
+                        'aria-haspopup'=>'true',
+                        'aria-expanded'=> 'false'
+                    ]).
+                      '<ul class="dropdown-menu">
+                        <li>'.
+                            Html::a('Modificar datos', ['usuarios/update', 'id' => Yii::$app->user->id], ['class' => 'btn btn-default']) .
+                        '</li>
+                        <li>'.
+                            Html::beginForm(['/site/logout'], 'post', ['class' => 'btn']) .
+                                Html::submitButton(
+                                    'Logout (' . Yii::$app->user->identity->nombre . ')',
+                                    ['class' => 'btn btn-default']
+                                ) .
+                            Html::endForm() .
+                        '</li>
+                      </ul>
+                </li>'
             )
         ],
     ]);
