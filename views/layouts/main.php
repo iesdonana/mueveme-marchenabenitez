@@ -39,6 +39,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Publicar', 'url' => ['/noticias/create']],
             Yii::$app->user->isGuest ? (
                 '<li>'.
                     Html::a('Registrar usuario', ['usuarios/create'], ['class' => 'btn btn-link']) .
@@ -48,7 +49,7 @@ AppAsset::register($this);
                 '</li>'
             ) : (
                 '<li class="dropdown">' .
-                    Html::a('Usuario (' . Yii::$app->user->identity->nombre . ') <span class="caret"></span>',
+                    Html::a('Usuario <span class="caret"></span>',
                     [''],
                     [
                         'class' => 'dropdown-toggle',
