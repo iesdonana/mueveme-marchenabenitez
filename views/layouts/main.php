@@ -41,16 +41,37 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'Publicar', 'url' => ['/noticias/create']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                '<li>'.
+                    Html::a('Registrar usuario', ['usuarios/create'], ['class' => 'btn btn-link']) .
+                '</li>'.
+                '<li>' .
+                    Html::a('Login', ['/site/login'], ['class' => 'btn btn-link']) .
+                '</li>'
             ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->nombre . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
+                '<li class="dropdown">' .
+                    Html::a('Usuario <span class="caret"></span>',
+                    [''],
+                    [
+                        'class' => 'dropdown-toggle',
+                        'data-toggle'=>'dropdown',
+                        'role'=>'button',
+                        'aria-haspopup'=>'true',
+                        'aria-expanded'=> 'false'
+                    ]).
+                      '<ul class="dropdown-menu">
+                        <li>'.
+                            Html::a('Modificar datos', ['usuarios/update', 'id' => Yii::$app->user->id], ['class' => 'btn btn-default']) .
+                        '</li>
+                        <li>'.
+                            Html::beginForm(['/site/logout'], 'post', ['class' => 'btn']) .
+                                Html::submitButton(
+                                    'Logout (' . Yii::$app->user->identity->nombre . ')',
+                                    ['class' => 'btn btn-default']
+                                ) .
+                            Html::endForm() .
+                        '</li>
+                      </ul>
+                </li>'
             )
         ],
     ]);
