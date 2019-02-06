@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-md-9">
             <h4><?= Html::a($model->titulo, $model->link) ?></h4>
-            <p>por <b><?= $model->usuario->nombre ?></b> a <b><?= Url::to($model->link) ?></b>  publicado <?= Yii::$app->formatter->asDatetime($model->created_at)  ?></p>
+            <p>por <b><?= $model->usuario->nombre ?></b> a <b><?= Url::to($model->link) ?></b>  publicado <?= Yii::$app->formatter->asDatetime($model->created_at, "short")  ?></p>
             <p><?= $model->noticia ?></p>
             <p><b><?= $model->categoria->categoria ?></b></p>
         </div>
