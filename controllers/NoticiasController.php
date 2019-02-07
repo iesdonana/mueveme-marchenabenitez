@@ -72,8 +72,12 @@ class NoticiasController extends Controller
      */
     public function actionView($id)
     {
+        $searchModel = new NoticiasSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

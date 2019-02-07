@@ -1,7 +1,10 @@
 <?php
 
+use yii\grid\GridView;
+
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\widgets\ListView;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -13,20 +16,12 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="noticias-view">
+    <?= $this->render('_portada', [
+        'model' => $model,
+    ]) ?>
 
-    <div class="row">
-        <div class="col-md-2">
-            <button type="submit" class='btn btn-success'>Muévelo</button>
-        </div>
-        <div class="col-md-9">
-            <h4><?= Html::a($model->titulo, $model->link) ?></h4>
-            <p>por <b><?= $model->usuario->nombre ?></b> a <b><?= Url::to($model->link) ?></b>  publicado <?= Yii::$app->formatter->asDatetime($model->created_at, "short")  ?></p>
-            <p><?= $model->noticia ?></p>
-            <p><b><?= $model->categoria->categoria ?></b></p>
-        </div>
- </div>
  <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12 text-center ">
         <?php if ($model->usuario_id == Yii::$app->user->id) : ?>
             <p>
                 <?= Html::a('Modificar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
