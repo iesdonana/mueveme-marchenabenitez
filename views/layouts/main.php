@@ -38,7 +38,14 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Todas',
+                'items' => [
+                     ['label' => 'Level 1 - Dropdown A', 'url' => '#'],
+                     '<li class="divider"></li>',
+                     ['label' => 'Level 1 - Dropdown B', 'url' => '#'],
+                ],
+            ],
+            ['label' => 'Todas', 'url' => ['/noticias/index/']],
             ['label' => 'Publicar', 'url' => ['/noticias/create']],
             Yii::$app->user->isGuest ? (
                 '<li>'.
