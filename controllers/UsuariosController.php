@@ -2,12 +2,15 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\Usuarios;
 use app\models\UsuariosSearch;
+use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * UsuariosController implements the CRUD actions for Usuarios model.
@@ -20,6 +23,25 @@ class UsuariosController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['update', 'create'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['update'],
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->request->get('id') == Yii::$app->user->id;
+                        },
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['?'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -46,7 +68,7 @@ class UsuariosController extends Controller
 
     /**
      * Displays a single Usuarios model.
-     * @param integer $id
+     * @param int $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -64,7 +86,12 @@ class UsuariosController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Usuarios();
+        $model = new Usuarios(['scenario' => Usuarios::SCENARIO_CREATE]);
+
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -78,27 +105,35 @@ class UsuariosController extends Controller
     /**
      * Updates an existing Usuarios model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
+     * @param int $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = Usuarios::SCENARIO_UPDATE;
+
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $model->password = $model->password_repeat = '';
+
         return $this->render('update', [
-            'model' => $model,
+           'model' => $model,
         ]);
     }
 
     /**
      * Deletes an existing Usuarios model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param int $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -112,7 +147,7 @@ class UsuariosController extends Controller
     /**
      * Finds the Usuarios model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
+     * @param int $id
      * @return Usuarios the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
