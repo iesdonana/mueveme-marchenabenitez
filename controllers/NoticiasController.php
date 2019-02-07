@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Noticias;
+use app\models\Comentarios;
 use app\models\NoticiasSearch;
 use Yii;
 use yii\db\Expression;
@@ -72,12 +73,9 @@ class NoticiasController extends Controller
      */
     public function actionView($id)
     {
-        $searchModel = new NoticiasSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'comentarios' => $this->buscaComentarios($id)
         ]);
     }
 
@@ -150,5 +148,11 @@ class NoticiasController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    private function buscaComentarios($id)
+    {
+        $comentarios = Comentarios::find()->where(['=', 'noticia_id', $id])->all();
+        return $comentarios;
     }
 }
