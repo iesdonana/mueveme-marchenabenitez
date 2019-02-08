@@ -87,6 +87,8 @@ VALUES ('El Ayuntamiento de Madrid dejará de estar intervenido por Hacienda', '
 INSERT INTO comentarios (comentario, usuario_id, noticia_id, comentario_id)
 VALUES ('Los Iphones son mejores', 3, 2, null)
      , ('No entiendes de moviles', 4, 2, 1)
+     , ('bla', 3, 2, 2)
+     , ('blabla', 2, 2, null)
      , ('Estos rusos hacen lo imposible', 2, 3, null)
      , ('Y los chinos', 1, 3, 3);
 
