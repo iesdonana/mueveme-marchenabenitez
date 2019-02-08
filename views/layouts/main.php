@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\models\Categorias;
 use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -26,6 +27,23 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
+<?php
+$categorias = Categorias::find()->asArray()->all();
+$items = [
+    [
+        'label' => 'Todas',
+        'url' => ['noticias/index', 'NoticiasSearch[categoria_id]' => ''],
+    ]
+];
+
+foreach ($categorias as $categoria) {
+    $items[] = [
+            'label' => $categoria['categoria'],
+            'url' => ['noticias/index', 'NoticiasSearch[categoria_id]' => $categoria['id']],
+    ];
+}
+?>
+
 <div class="wrap">
     <?php
     NavBar::begin([
@@ -35,17 +53,13 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Todas',
-                'items' => [
-                     ['label' => 'Level 1 - Dropdown A', 'url' => '#'],
-                     '<li class="divider"></li>',
-                     ['label' => 'Level 1 - Dropdown B', 'url' => '#'],
-                ],
+            ['label' => 'Más',
+                'items' => $items,
             ],
-            ['label' => 'Todas', 'url' => ['/noticias/index/']],
             ['label' => 'Publicar', 'url' => ['/noticias/create']],
             Yii::$app->user->isGuest ? (
                 '<li>'.
