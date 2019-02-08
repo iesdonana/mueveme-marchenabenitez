@@ -1,5 +1,7 @@
 <?php
 
+use app\models\Comentarios;
+
 use yii\grid\GridView;
 
 use yii\helpers\Url;
@@ -42,34 +44,32 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <div class="container">
-
         <div class="row">
             <?php foreach ($comentarios as $comentario): ?>
-                <?php if ($comentario->comentario_id == null) : ?>
-                    <div class="col-md-12">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading"><?='#'. $comentario->id . ' ' .
-                                Html::a(Html::encode($comentario->usuario->nombre),
-                                ['usuarios/view', 'id' => $comentario->usuario_id], ['style' => 'color:white']) ?>
-                            </div>
-                            <div class="panel-body">
-                                    <?= $comentario->comentario ?>
-                            </div>
+                <?php if ($comentario->comentario_id == null) {
+                    $class = '';
+                    $num = '';
+
+                } else {
+                    $comentarioPadre = Comentarios::find()->where(['=', 'id', $comentario->comentario_id])->one();
+                    $class = 'col-md-offset-1';
+                    $num ='#' . Html::a(
+                        Html::encode($comentario->comentario_id),
+                        [''],
+                        ['title' => $comentarioPadre->comentario]);
+                }
+            ?>
+                <div class="col-md-12">
+                    <div <?='class="panel panel-primary ' . $class . '"' ?>>
+                        <div class="panel-heading"><?='#'. $comentario->id . ' ' .
+                            Html::a(Html::encode($comentario->usuario->nombre),
+                            ['usuarios/view', 'id' => $comentario->usuario_id], ['style' => 'color:white']) ?>
+                        </div>
+                        <div class="panel-body">
+                            <?= $num . ' ' . $comentario->comentario ?>
                         </div>
                     </div>
-                <?php else: ?>
-                    <div class="col-md-12">
-                        <div class="panel panel-primary col-md-offset-1">
-                            <div class="panel-heading"><?='#'. $comentario->id . ' ' .
-                                Html::a(Html::encode($comentario->usuario->nombre),
-                                ['usuarios/view', 'id' => $comentario->usuario_id], ['style' => 'color:white']) ?>
-                            </div>
-                            <div class="panel-body">
-                                <?= '#'. $comentario->comentario_id . ' ' . $comentario->comentario ?>    
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                </div>
             <?php endforeach; ?>
         </div>
     </div>
