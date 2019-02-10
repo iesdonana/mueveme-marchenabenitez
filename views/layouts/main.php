@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\models\Categorias;
 use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -26,6 +27,25 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
+<?php
+$categorias = Categorias::find()->all();
+
+$items = [
+    [
+        'label' => 'Todas',
+        'url' => ['noticias/index', 'NoticiasSearch[categoria_id]' => ''],
+    ],
+];
+
+foreach ($categorias as $categoria) {
+    $items[] = '<li class="divider"></li>';
+    $items[] = [
+            'label' => $categoria->categoria,
+            'url' => ['noticias/index', 'NoticiasSearch[categoria_id]' => $categoria->id],
+    ];
+}
+?>
+
 <div class="wrap">
     <?php
     NavBar::begin([
@@ -35,10 +55,13 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Más',
+                'items' => $items,
+            ],
             ['label' => 'Publicar', 'url' => ['/noticias/create']],
             Yii::$app->user->isGuest ? (
                 '<li>'.
