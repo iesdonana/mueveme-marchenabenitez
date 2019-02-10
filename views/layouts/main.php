@@ -28,18 +28,20 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <?php
-$categorias = Categorias::find()->asArray()->all();
+$categorias = Categorias::find()->all();
+
 $items = [
     [
         'label' => 'Todas',
         'url' => ['noticias/index', 'NoticiasSearch[categoria_id]' => ''],
-    ]
+    ],
 ];
 
 foreach ($categorias as $categoria) {
+    $items[] = '<li class="divider"></li>';
     $items[] = [
-            'label' => $categoria['categoria'],
-            'url' => ['noticias/index', 'NoticiasSearch[categoria_id]' => $categoria['id']],
+            'label' => $categoria->categoria,
+            'url' => ['noticias/index', 'NoticiasSearch[categoria_id]' => $categoria->id],
     ];
 }
 ?>
