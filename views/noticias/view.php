@@ -53,13 +53,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $comentario,
                     ]) ?>
                 <?php endif; ?>
-                <?php
-                $offset = 1;
-                ?>
+                <?php $offset = 1;?>
                 <?php foreach ($comentario->getComentariosHijos() as $comentarioHijo): ?>
-                    <?php if ($comentario->comentario_id != null): ?>
-                        <?php $offset += 1 ?>
-                    <?php endif; ?>
+                    <?php if ($comentario->comentario_id != null) {
+                        $offset += 1;
+                    } ?>
                         <div <?='class="col-md-offset-'. $offset. '"' ?>>
                             <?= $this->render('../comentarios/_comentario',
                             [
