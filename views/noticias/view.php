@@ -1,13 +1,9 @@
 <?php
 
 use app\models\Comentarios;
-
-use yii\grid\GridView;
-
-use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\widgets\ListView;
-use yii\widgets\DetailView;
+use yii\widgets\ActiveForm;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Noticias */
@@ -16,6 +12,8 @@ $this->title = $model->titulo;
 $this->params['breadcrumbs'][] = ['label' => 'Noticias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+$com = new Comentarios();
 ?>
 <div class="noticias-view">
     <?= $this->render('_portada', [
@@ -44,6 +42,16 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <div class="well well-sm">COMENTARIOS</div>
+    <?php $form = ActiveForm::begin(); ?>
+
+    <?= $form->field($com, 'comentario')->textarea(['rows' => 6])->label('Comentario') ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
     <div class="container">
         <div class="col-md-12">
             <?php foreach ($comentarios as $comentario): ?>
