@@ -43,33 +43,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php endif ?>
         </div>
     </div>
+    <div class="well well-sm">COMENTARIOS</div>
     <div class="container">
-        <div class="row">
+        <div class="col-md-12">
             <?php foreach ($comentarios as $comentario): ?>
-                <?php if ($comentario->comentario_id == null) {
-                    $class = '';
-                    $num = '';
-
-                } else {
-                    $comentarioPadre = Comentarios::find()->where(['=', 'id', $comentario->comentario_id])->one();
-                    $class = 'col-md-offset-1';
-                    $num ='#' . Html::a(
-                        Html::encode($comentario->comentario_id),
-                        [''],
-                        ['title' => $comentarioPadre->comentario]);
-                }
-            ?>
-                <div class="col-md-12">
-                    <div <?='class="panel panel-primary ' . $class . '"' ?>>
-                        <div class="panel-heading"><?='#'. $comentario->id . ' ' .
-                            Html::a(Html::encode($comentario->usuario->nombre),
-                            ['usuarios/view', 'id' => $comentario->usuario_id], ['style' => 'color:white']) ?>
+                <?php if ($comentario->comentario_id == null): ?>
+                    <?= $this->render('../comentarios/_comentario',
+                    [
+                        'model' => $comentario,
+                    ]) ?>
+                <?php endif; ?>
+                <?php
+                $offset = 1;
+                ?>
+                <?php foreach ($comentario->getComentariosHijos() as $comentarioHijo): ?>
+                    <?php if ($comentario->comentario_id != null): ?>
+                        <?php $offset += 1 ?>
+                    <?php endif; ?>
+                        <div <?='class="col-md-offset-'. $offset. '"' ?>>
+                            <?= $this->render('../comentarios/_comentario',
+                            [
+                                'model' => $comentarioHijo,
+                            ]) ?>
                         </div>
-                        <div class="panel-body">
-                            <?= $num . ' ' . $comentario->comentario ?>
-                        </div>
-                    </div>
-                </div>
+                        <?php $offset++ ?>
+                <?php endforeach; ?>
             <?php endforeach; ?>
         </div>
     </div>

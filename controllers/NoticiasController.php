@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use app\models\Noticias;
 use app\models\Comentarios;
+use app\models\Noticias;
 use app\models\NoticiasSearch;
 use Yii;
 use yii\db\Expression;
@@ -75,7 +75,7 @@ class NoticiasController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'comentarios' => $this->buscaComentarios($id)
+            'comentarios' => $this->buscaComentarios($id),
         ]);
     }
 
@@ -152,7 +152,11 @@ class NoticiasController extends Controller
 
     private function buscaComentarios($id)
     {
-        $comentarios = Comentarios::find()->where(['=', 'noticia_id', $id])->all();
+        $comentarios = Comentarios::find()->where(
+            [
+                'noticia_id' => $id,
+            ]
+        )->all();
         return $comentarios;
     }
 }
