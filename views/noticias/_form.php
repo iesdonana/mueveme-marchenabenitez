@@ -1,5 +1,7 @@
 <?php
 
+use kartik\select2\Select2;
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -18,13 +20,20 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'link')->textInput(['maxlength' => true])->label('URL') ?>
 
-    <?= $form->field($model, 'categoria_id')
-             ->dropDownList(\app\models\Categorias::find()
-             ->select('categoria')->indexBy('id')->column(),
-             [
-                 'prompt' => 'Seleccione la categoría'
-             ])
-             ->label('Categoría')
+
+
+
+
+    <?= $form->field($model, 'categoria_id')->widget(Select2::classname(), [
+            'data' => \app\models\Categorias::find()
+                            ->select('categoria')
+                            ->indexBy('id')
+                            ->column(),
+            'options' => ['placeholder' => 'Seleccione una categoria'],
+            'pluginOptions' => [
+            'allowClear' => true
+            ],
+        ]);
     ?>
 
     <div class="form-group">
