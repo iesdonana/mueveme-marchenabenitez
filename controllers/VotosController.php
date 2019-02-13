@@ -2,12 +2,12 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\Votos;
 use app\models\VotosSearch;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * VotosController implements the CRUD actions for Votos model.
@@ -46,8 +46,8 @@ class VotosController extends Controller
 
     /**
      * Displays a single Votos model.
-     * @param integer $usuario_id
-     * @param integer $comentario_id
+     * @param int $usuario_id
+     * @param int $comentario_id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -68,7 +68,7 @@ class VotosController extends Controller
         $model = new Votos();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'usuario_id' => $model->usuario_id, 'comentario_id' => $model->comentario_id]);
+            return $this->redirect(['/noticias/view', 'id' => $model->comentario->noticia_id]);
         }
 
         return $this->render('create', [
@@ -79,8 +79,8 @@ class VotosController extends Controller
     /**
      * Updates an existing Votos model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $usuario_id
-     * @param integer $comentario_id
+     * @param int $usuario_id
+     * @param int $comentario_id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -100,8 +100,8 @@ class VotosController extends Controller
     /**
      * Deletes an existing Votos model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $usuario_id
-     * @param integer $comentario_id
+     * @param int $usuario_id
+     * @param int $comentario_id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -115,8 +115,8 @@ class VotosController extends Controller
     /**
      * Finds the Votos model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $usuario_id
-     * @param integer $comentario_id
+     * @param int $usuario_id
+     * @param int $comentario_id
      * @return Votos the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
