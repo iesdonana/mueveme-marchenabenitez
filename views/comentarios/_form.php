@@ -1,5 +1,7 @@
 <?php
 
+use app\models\Comentarios;
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -10,7 +12,9 @@ use yii\widgets\ActiveForm;
 
 <div class="comentarios-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'action' => 'app\models\Comentarios/create',
+    ]); ?>
 
     <?= $form->field($model, 'comentario')->textarea(['rows' => 6]) ?>
 
