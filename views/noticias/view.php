@@ -1,6 +1,8 @@
 <?php
 
 use app\models\Comentarios;
+use yii\helpers\Url;
+use yii\db\Expression;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -12,8 +14,6 @@ $this->title = $model->titulo;
 $this->params['breadcrumbs'][] = ['label' => 'Noticias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-
-$com = new Comentarios();
 ?>
 <div class="noticias-view">
     <?= $this->render('_portada', [
@@ -42,15 +42,35 @@ $com = new Comentarios();
         </div>
     </div>
     <div class="well well-sm">COMENTARIOS</div>
-    <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($com, 'comentario')->textarea(['rows' => 6])->label('Comentario') ?>
+    <?php
+    if (!Yii::$app->user->isGuest):
+        $com = new Comentarios();
+        $com->usuario_id = Yii::$app->user->id;
+        $com->created_at = new Expression('NOW()');
+        $com->noticia_id = $model->id;
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
+        $form = ActiveForm::begin([
+            'method' => 'POST',
+            'action' => Url::to(['comentarios/create']),
+        ]); ?>
 
-    <?php ActiveForm::end(); ?>
+        <?= $form->field($com, 'comentario')->textarea(['rows' => 3])->label(false) ?>
+
+        <?= $form->field($com, 'usuario_id')->textInput()->hiddenInput()->label(false) ?>
+
+        <?= $form->field($com, 'noticia_id')->textInput()->hiddenInput()->label(false) ?>
+
+        <?= $form->field($com, 'comentario_id')->textInput()->hiddenInput()->label(false) ?>
+
+        <?= $form->field($com, 'created_at')->textInput()->hiddenInput()->label(false) ?>
+
+        <div class="form-group">
+            <button class="btn btn-xs btn-success" type="submit" name="button">Comentar</button>
+        </div>
+
+        <?php ActiveForm::end(); ?>
+    <?php endif ?>
 
     <div class="container">
         <div class="col-md-12">
