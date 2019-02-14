@@ -6,6 +6,7 @@ use app\models\Comentarios;
 use app\models\Noticias;
 use app\models\NoticiasSearch;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -62,6 +63,21 @@ class NoticiasController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionCandidatas()
+    {
+        $query = Noticias::find()
+            ->joinWith('movimientos')
+            ->groupBy('id')
+            ->having(['<', 'count(noticia_id)', 1]);
+
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+        return $this->render('candidatas', [
+            'dataProvider' => $provider,
         ]);
     }
 
