@@ -70,4 +70,9 @@ class Votos extends \yii\db\ActiveRecord
     {
         return $this->find()->where(['comentario_id' => $comentario_id, 'voto' => true])->count();
     }
+
+    public function getNegativos($comentario_id)
+    {
+        return $this->find()->where(['comentario_id' => $comentario_id, 'voto' => false])->count();
+    }
 }

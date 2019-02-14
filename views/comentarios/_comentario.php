@@ -16,31 +16,24 @@ use yii\widgets\ActiveForm;
         <div class="panel-body">
             <?= $model->comentario ?>
             <?php if (!Yii::$app->user->isGuest): ?>
-                <?php
-                $voto = new Votos();
-                $voto->usuario_id = Yii::$app->user->id;
-                $voto->comentario_id = $model->id;
-                $voto->voto = true;
-
-                $form = ActiveForm::begin([
-                    'method' => 'POST',
-                    'action' => Url::to(['votos/create']),
-                ]); ?>
-
-                <?= $form->field($voto, 'usuario_id')->textInput()->hiddenInput()->label(false) ?>
-
-                <?= $form->field($voto, 'comentario_id')->textInput()->hiddenInput()->label(false) ?>
-
-                <?= $form->field($voto, 'voto')->checkbox()->hiddenInput()->label(false) ?>
-
-                <div class="text-right votos">
-                    <button type="submit" class="btn btn-success" aria-label="Left Align">
-                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"><?=$voto->getPositivos($model->id)?></span>
-                    </button>
-                <?php ActiveForm::end(); ?>
-                    <button type="button" class="btn btn-danger" aria-label="Left Align">
-                        <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
-                    </button>
+                <div class="text-right">
+                    <?php
+                    $voto = new Votos();
+                    ?>
+                    <?= Html::beginForm(Url::to(['votos/votar'])) ?>
+                    	<?= Html::hiddenInput('comentario_id', $model->id) ?>
+                        <?= Html::hiddenInput('tipoVoto', 'true') ?>
+                        <button type="submit" class="btn btn-success" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"><?=$voto->getPositivos($model->id)?></span>
+                        </button>
+                    <?= Html::endForm() ?>
+                    <?= Html::beginForm(Url::to(['votos/votar'])) ?>
+                    	<?= Html::hiddenInput('comentario_id', $model->id) ?>
+                        <?= Html::hiddenInput('tipoVoto', 'false') ?>
+                        <button type="submit" class="btn btn-danger" aria-label="Left Align">
+                            <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"><?=$voto->getNegativos($model->id)?></span>
+                        </button>
+                    <?= Html::endForm() ?>
                 </div>
             <?php endif ?>
         </div>

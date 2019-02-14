@@ -128,4 +128,33 @@ class VotosController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionVotar()
+    {
+        $comentario_id = Yii::$app->request->post('comentario_id');
+        $tipoVoto = filter_var(
+            Yii::$app->request->post('tipoVoto'),
+            FILTER_VALIDATE_BOOLEAN
+        );
+        $usuario_id = Yii::$app->user->identity->id;
+        $voto = Votos::find()
+               ->where([
+                   'comentario_id' => $comentario_id,
+                   'usuario_id' => $usuario_id,
+               ])->one();
+        if ($voto) {
+            Yii::$app->session->setFlash('warning', 'Ya has votado este comentario');
+            return $this->redirect(['/noticias/view', 'id' => $voto->comentario->noticia_id]);
+        }
+        $voto = new Votos([
+                   'comentario_id' => $comentario_id,
+                   'usuario_id' => $usuario_id,
+                   'voto' => $tipoVoto,
+            ]);
+
+        if (!$voto->save()) {
+            Yii::$app->session->setFlash('error', 'No se ha podido registrar su voto');
+        }
+        return $this->redirect(['/noticias/view', 'id' => $voto->comentario->noticia_id]);
+    }
 }
