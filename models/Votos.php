@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-
 /**
  * This is the model class for table "votos".
  *
@@ -66,5 +64,15 @@ class Votos extends \yii\db\ActiveRecord
     public function getUsuario()
     {
         return $this->hasOne(Usuarios::className(), ['id' => 'usuario_id'])->inverseOf('votos');
+    }
+
+    public function getPositivos($comentario_id)
+    {
+        return $this->find()->where(['comentario_id' => $comentario_id, 'voto' => true])->count();
+    }
+
+    public function getNegativos($comentario_id)
+    {
+        return $this->find()->where(['comentario_id' => $comentario_id, 'voto' => false])->count();
     }
 }
