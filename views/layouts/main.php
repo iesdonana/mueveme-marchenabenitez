@@ -59,9 +59,8 @@ foreach ($categorias as $categoria) {
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Más',
-                'items' => $items,
-            ],
+            ['label' => 'Nuevas', 'url' => ['/noticias/candidatas']],
+            ['label' => 'Más','items' => $items],
             ['label' => 'Publicar', 'url' => ['/noticias/create']],
             Yii::$app->user->isGuest ? (
                 '<li>'.

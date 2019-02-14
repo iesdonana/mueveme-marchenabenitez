@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use app\models\Comentarios;
 use app\models\Noticias;
-use app\models\NoticiasSearch;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
@@ -12,6 +11,8 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+
+define('MIN_MOVS', 2);
 
 /**
  * NoticiasController implements the CRUD actions for Noticias model.
@@ -57,12 +58,16 @@ class NoticiasController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new NoticiasSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $query = Noticias::find()
+            ->joinWith('movimientos')
+            ->groupBy('id')
+            ->having(['>', 'count(noticia_id)', MIN_MOVS]);
 
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $provider,
         ]);
     }
 
@@ -71,7 +76,7 @@ class NoticiasController extends Controller
         $query = Noticias::find()
             ->joinWith('movimientos')
             ->groupBy('id')
-            ->having(['<', 'count(noticia_id)', 1]);
+            ->having(['<=', 'count(noticia_id)', MIN_MOVS]);
 
         $provider = new ActiveDataProvider([
             'query' => $query,
