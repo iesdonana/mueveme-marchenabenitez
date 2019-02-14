@@ -56,10 +56,19 @@ foreach ($categorias as $categoria) {
         ],
     ]);
 
+    $url = explode("%2F", Yii::$app->request->url);
+    if (count($url) == 1) {
+        $ir = 'Candidatas';
+    } elseif ($url[1] == 'candidatas') {
+        $ir = 'Portada';
+    } else {
+        $ir = 'candidatas';
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Nuevas', 'url' => ['/noticias/candidatas']],
+            ['label' => $ir, 'url' => ["/noticias/$ir"]],
             ['label' => 'Más','items' => $items],
             ['label' => 'Publicar', 'url' => ['/noticias/create']],
             Yii::$app->user->isGuest ? (
