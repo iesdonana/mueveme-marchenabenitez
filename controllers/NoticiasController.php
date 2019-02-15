@@ -6,6 +6,7 @@ use app\models\Comentarios;
 use app\models\Noticias;
 use app\models\NoticiasSearch;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -51,7 +52,7 @@ class NoticiasController extends Controller
     }
 
     /**
-     * Lists all Noticias models.
+     * Lista las noticias de portada.
      * @return mixed
      */
     public function actionIndex()
@@ -60,8 +61,30 @@ class NoticiasController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+           'searchModel' => $searchModel,
+           'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lista las noticias candidatas a portada.
+     * @return mixed
+     */
+    public function actionCandidatas()
+    {
+        $query = Noticias::find()
+            ->joinWith('movimientos')
+            ->groupBy('id')
+            ->having(['<=', 'count(noticia_id)', Noticias::MIN_MOVS]);
+
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
+        return $this->render('candidatas', [
+            'dataProvider' => $provider,
         ]);
     }
 

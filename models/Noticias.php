@@ -22,6 +22,12 @@ namespace app\models;
 class Noticias extends \yii\db\ActiveRecord
 {
     /**
+     * Movimientos mínimos para aparecer en portada.
+     * @var int
+     */
+    const MIN_MOVS = 2;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
