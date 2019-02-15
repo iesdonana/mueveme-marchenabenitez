@@ -13,8 +13,6 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-define('MIN_MOVS', 2);
-
 /**
  * NoticiasController implements the CRUD actions for Noticias model.
  */
@@ -54,41 +52,17 @@ class NoticiasController extends Controller
     }
 
     /**
-     * Lists all Noticias models.
+     * Lista las noticias de portada.
      * @return mixed
      */
     public function actionIndex()
     {
-        if (count($_GET) === 0) {
-            return $this->redirect(['noticias/portada']);
-        }
-
         $searchModel = new NoticiasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
            'searchModel' => $searchModel,
            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Lista todas las noticias de la portada.
-     * @return mixed
-     */
-    public function actionPortada()
-    {
-        $query = Noticias::find()
-            ->joinWith('movimientos')
-            ->groupBy('id')
-            ->having(['>', 'count(noticia_id)', MIN_MOVS]);
-
-        $provider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        return $this->render('portada', [
-            'dataProvider' => $provider,
         ]);
     }
 
@@ -101,10 +75,13 @@ class NoticiasController extends Controller
         $query = Noticias::find()
             ->joinWith('movimientos')
             ->groupBy('id')
-            ->having(['<=', 'count(noticia_id)', MIN_MOVS]);
+            ->having(['<=', 'count(noticia_id)', Noticias::MIN_MOVS]);
 
         $provider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
         ]);
         return $this->render('candidatas', [
             'dataProvider' => $provider,
