@@ -65,9 +65,6 @@ foreach ($categorias as $categoria) {
         $ir = 'candidatas';
     }
 
-    var_dump(count($_GET));
-
-
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
