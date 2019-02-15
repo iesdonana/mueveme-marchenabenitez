@@ -92,8 +92,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'model' => $comentarioHijo,
                             ]) ?>
                         </div>
-                        <?php $offset++ ?>
                 <?php endforeach; ?>
+                <?php $offset++ ?>
             <?php endforeach; ?>
         </div>
     </div>
