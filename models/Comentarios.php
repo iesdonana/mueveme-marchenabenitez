@@ -109,11 +109,11 @@ class Comentarios extends \yii\db\ActiveRecord
         return $this->hasMany(Usuarios::className(), ['id' => 'usuario_id'])->viaTable('votos', ['comentario_id' => 'id']);
     }
 
-    public function getComentariosHijos()
+    public function getComentariosHijos($id)
     {
         return $this
             ->find()
-            ->where(['comentario_id' => $this->id])
+            ->where(['comentario_id' => $id])
             ->all();
     }
 }
