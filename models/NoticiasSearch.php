@@ -39,7 +39,11 @@ class NoticiasSearch extends Noticias
      */
     public function search($params)
     {
-        $query = Noticias::find()->joinWith('usuarios')->joinWith('categoria');
+        $query = Noticias::find()
+            ->joinWith('usuarios')
+            ->joinWith('categoria')
+            ->groupBy('noticias.id')
+            ->having(['>', 'count(noticia_id)', 2]);
 
         // add conditions that should always apply here
 
