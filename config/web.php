@@ -61,7 +61,7 @@ $config = [
         */
     ],
     'params' => $params,
-    'defaultRoute' => 'noticias/index',
+    'defaultRoute' => 'noticias/portada',
 ];
 
 if (YII_ENV_DEV) {
