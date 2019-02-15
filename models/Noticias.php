@@ -48,6 +48,7 @@ class Noticias extends \yii\db\ActiveRecord
             [['created_at'], 'safe'],
             [['titulo', 'link'], 'string', 'max' => 255],
             [['link'], 'unique'],
+            [['link'], 'url'],
             [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categorias::className(), 'targetAttribute' => ['categoria_id' => 'id']],
             [['usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuarios::className(), 'targetAttribute' => ['usuario_id' => 'id']],
         ];
