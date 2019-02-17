@@ -81,8 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $comentario,
                     ]) ?>
                 </div>
-
-                    <?php foreach ($comentario->getcomentariosHijos($comentario->id) as $comentarioHijo): ?>
+                    <?php foreach ($comentario->getcomentariosHijos($model->id,$comentario->id) as $comentarioHijo): ?>
                     <div class="row">
                         <div class="col-md-offset-1">
                                 <?= $this->render('../comentarios/_comentario',
@@ -91,11 +90,17 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]) ?>
                         </div>
                     </div>
+                        <?php foreach ($comentarioHijo->getcomentariosHijos($model->id,$comentarioHijo->id) as $comentarioHijo1): ?>
+                        <div class="row">
+                            <div class="col-md-offset-2">
+                                    <?= $this->render('../comentarios/_comentario',
+                                    [
+                                        'model' => $comentarioHijo1,
+                                    ]) ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
                     <?php endforeach; ?>
-
-                <?php $offset = 1;?>
-
-                <?php $offset++ ?>
             <?php endforeach; ?>
         </div>
     </div>

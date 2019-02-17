@@ -6,7 +6,6 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 $creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
-
  ?>
  <style type="text/css">
     .col {
@@ -47,7 +46,7 @@ $creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
                         <?= Html::endForm() ?>
                     </div>
                 </div>
-                <div class="row">
+                <div class="col-md-offset-1">
                     <?php
                     $com1 = new Comentarios();
                     $com1->usuario_id = Yii::$app->user->id;
@@ -59,7 +58,7 @@ $creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
                         'action' => Url::to(['comentarios/responder']),
                     ]); ?>
 
-                    <?= $form1->field($com1, 'comentario')->textarea(['rows' => 2])->label('Responder') ?>
+                    <?= $form1->field($com1, 'comentario')->textarea(['rows' => 2])->label('Respuesta') ?>
 
                     <?= $form1->field($com1, 'usuario_id')->textInput()->hiddenInput()->label(false) ?>
 

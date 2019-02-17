@@ -155,6 +155,7 @@ class NoticiasController extends Controller
         $comentarios = Comentarios::find()->where(
             [
                 'noticia_id' => $id,
+                'comentario_id' => null,
             ]
         )->all();
         return $comentarios;
