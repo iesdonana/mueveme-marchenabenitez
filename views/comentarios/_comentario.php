@@ -6,7 +6,6 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 $creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
-
  ?>
  <style type="text/css">
     .col {
@@ -47,6 +46,34 @@ $creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
                         <?= Html::endForm() ?>
                     </div>
                 </div>
+                <div class="col-md-offset-1">
+                    <?php
+                    $com1 = new Comentarios();
+                    $com1->usuario_id = Yii::$app->user->id;
+                    $com1->created_at = new Expression('NOW()');
+                    $com1->noticia_id = $model->noticia_id;
+                    $com1->comentario_id = $model->id;
+                    $form1 = ActiveForm::begin([
+                        'method' => 'POST',
+                        'action' => Url::to(['comentarios/responder']),
+                    ]); ?>
+
+                    <?= $form1->field($com1, 'comentario')->textarea(['rows' => 2])->label('Respuesta') ?>
+
+                    <?= $form1->field($com1, 'usuario_id')->textInput()->hiddenInput()->label(false) ?>
+
+                    <?= $form1->field($com1, 'noticia_id')->textInput()->hiddenInput()->label(false) ?>
+
+                    <?= $form1->field($com1, 'comentario_id')->textInput()->hiddenInput()->label(false) ?>
+
+                    <?= $form1->field($com1, 'created_at')->textInput()->hiddenInput()->label(false) ?>
+
+                    <div class="form-group">
+                        <button class="btn btn-xs btn-success" type="submit" name="button">Responder</button>
+                    </div>
+                    <?php ActiveForm::end(); ?>
+                </div>
+
             <?php endif ?>
         </div>
     </div>

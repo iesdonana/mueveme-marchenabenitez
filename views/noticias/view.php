@@ -75,25 +75,32 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container">
         <div class="col-md-12">
             <?php foreach ($comentarios as $comentario): ?>
-                <?php if ($comentario->comentario_id == null): ?>
+                <div class="row">
                     <?= $this->render('../comentarios/_comentario',
                     [
                         'model' => $comentario,
                     ]) ?>
-                <?php endif; ?>
-                <?php $offset = 1;?>
-                <?php foreach ($comentario->getComentariosHijos() as $comentarioHijo): ?>
-                    <?php if ($comentario->comentario_id != null) {
-                        $offset += 1;
-                    } ?>
-                        <div <?='class="col-md-offset-'. $offset. '"' ?>>
-                            <?= $this->render('../comentarios/_comentario',
-                            [
-                                'model' => $comentarioHijo,
-                            ]) ?>
+                </div>
+                    <?php foreach ($comentario->getcomentariosHijos($model->id,$comentario->id) as $comentarioHijo): ?>
+                    <div class="row">
+                        <div class="col-md-offset-1">
+                                <?= $this->render('../comentarios/_comentario',
+                                [
+                                    'model' => $comentarioHijo,
+                                ]) ?>
                         </div>
-                        <?php $offset++ ?>
-                <?php endforeach; ?>
+                    </div>
+                        <?php foreach ($comentarioHijo->getcomentariosHijos($model->id,$comentarioHijo->id) as $comentarioHijo1): ?>
+                        <div class="row">
+                            <div class="col-md-offset-2">
+                                    <?= $this->render('../comentarios/_comentario',
+                                    [
+                                        'model' => $comentarioHijo1,
+                                    ]) ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
             <?php endforeach; ?>
         </div>
     </div>

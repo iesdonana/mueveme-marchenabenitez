@@ -23,7 +23,7 @@ class ComentariosController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['create'],
+                'only' => ['create', 'responder'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -134,5 +134,17 @@ class ComentariosController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    public function actionResponder()
+    {
+        $model = new Comentarios();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['noticias/view', 'id' => $model->noticia_id]);
+        }
+
+        return $this->render('create', [
+           'model' => $model,
+        ]);
     }
 }

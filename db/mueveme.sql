@@ -91,7 +91,9 @@ VALUES ('Los Iphones son mejores', 3, 2, null)
      , ('blabla', 2, 2, null)
      , ('blablabla', 3, 2, 4)
      , ('Estos rusos hacen lo imposible', 2, 3, null)
-     , ('Y los chinos', 1, 3, 6);
+     , ('Y los chinos', 1, 3, 6)
+     , ('Claro que si', 3, 2, 1)
+     , ('Claro que no', 2, 2, 8);
 
 INSERT INTO votos (usuario_id, comentario_id, voto)
 VALUES (4, 1, false)
