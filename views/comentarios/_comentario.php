@@ -70,7 +70,7 @@ $creado = Yii::$app->formatter->asDateTime($model->created_at, "short");
                               'action' => Url::to(['comentarios/responder']),
                           ]);
                           ?>
-                          <?= $form1->field($com1, 'comentario')->textarea(['rows' => 2])->label('Respuesta') ?>
+                          <?= $form1->field($com1, 'comentario')->textarea(['rows' => 2])->label(false) ?>
 
                           <?= $form1->field($com1, 'usuario_id')->textInput()->hiddenInput()->label(false) ?>
 
