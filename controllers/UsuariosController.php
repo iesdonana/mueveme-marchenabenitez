@@ -144,6 +144,22 @@ class UsuariosController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionEmail()
+    {
+        if (Yii::$app->mailer->compose('home-link')
+            ->setFrom('muevememb@gmail.com')
+            ->setTo('manu.a.bachi@gmail.com')
+            ->setSubject('Prueba de correo')
+            //->setTextBody('Esto es una prueba.')
+            //->setHtmlBody('<h1>Esto es una prueba</h1>')
+            ->send()) {
+            Yii::$app->session->setFlash('success', 'Se ha enviado correctamente.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Ha habido un error al mandar el correo.');
+        }
+        return $this->redirect(['site/index']);
+    }
+
     /**
      * Finds the Usuarios model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
