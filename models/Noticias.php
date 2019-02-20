@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Yii;
+
 /**
  * This is the model class for table "noticias".
  *
@@ -29,6 +31,7 @@ class Noticias extends \yii\db\ActiveRecord
         return 'noticias';
     }
 
+    public $imageFile;
     /**
      * {@inheritdoc}
      */
@@ -44,7 +47,21 @@ class Noticias extends \yii\db\ActiveRecord
             [['link'], 'unique'],
             [['categoria_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categorias::className(), 'targetAttribute' => ['categoria_id' => 'id']],
             [['usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Usuarios::className(), 'targetAttribute' => ['usuario_id' => 'id']],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
         ];
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $fileName = Yii::getAlias('@uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->imageFile->saveAs($fileName);
+            $imagine = new \Imagine\Gd\Imagine();
+            $image = $imagine->open($fileName);
+            $image->resize(new \Imagine\Image\Box(400, 200))->save($fileName);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -60,6 +77,7 @@ class Noticias extends \yii\db\ActiveRecord
             'usuario_id' => 'Usuario ID',
             'categoria_id' => 'Categoria ID',
             'created_at' => 'Created At',
+            'imageFile' => 'Imagen',
         ];
     }
 

@@ -11,6 +11,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 /**
  * NoticiasController implements the CRUD actions for Noticias model.
@@ -49,6 +50,20 @@ class NoticiasController extends Controller
             ],
         ];
     }
+
+    public function actionSubir()
+    {
+        $model = new Noticias();
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return $this->redirect(['site/index']);
+            }
+        }
+        return $this->render('_form', ['model' => $model]);
+    }
+
 
     /**
      * Lists all Noticias models.
@@ -90,6 +105,8 @@ class NoticiasController extends Controller
 
         $model->usuario_id = Yii::$app->user->id;
         $model->created_at = new Expression('NOW()');
+        $path = $model->id;
+        $model->imageFile->saveAs($path);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

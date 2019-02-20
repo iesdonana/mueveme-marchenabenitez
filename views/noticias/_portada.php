@@ -13,7 +13,7 @@ $creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
             <?= count($model->movimientos) . ' mov.' ?>
             <button type="button" class="btn btn-success">Muévelo</button>
         </div>
-        <div class="col-md-11">
+        <div class="col-md-10">
             <h4 class="titulo">
                 <?= Html::a(Html::encode($model->titulo), Html::encode($model->link)) ?>
             </h4>
@@ -32,6 +32,9 @@ $creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
                     ['noticias/index', 'NoticiasSearch[categoria_id]' => $model->categoria_id])
                 ?>
             </p>
+        </div>
+        <div class="col-md-1">
+            <?= Html::img('@uploads/test.png') ?>
         </div>
     </div>
 </div>
