@@ -1,9 +1,14 @@
 <?php
-use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
-/* @var $this \yii\web\View view component instance */
-/* @var $message \yii\mail\BaseMessage instance of newly created mail message */
 ?>
-<h2>This message allows you to visit our site home page by one click</h2>
-<?= Html::a('Go to home page', Url::home('http')) ?>
+<h2>Valida tu cuenta en Mueveme haciendo click abajo.</h2>
+<?php $form = ActiveForm::begin([
+    'action' => Url::to(['usuarios/validar'], true),
+]);?>
+
+<?= $form->field($model, 'nombre')->hiddenInput()->label(false)  ?>
+
+<button type="submit" name="button">Validar email</button>
+<?php ActiveForm::end() ?>

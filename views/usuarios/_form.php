@@ -16,9 +16,13 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
+        <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+
         <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'password_repeat')->passwordInput(['maxlength' => true]) ?>
+
+        <?= $form->field($model, 'confirm')->hiddenInput()->label(false) ?>
 
         <div class="form-group">
             <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>

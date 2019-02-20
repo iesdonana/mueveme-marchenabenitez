@@ -94,7 +94,8 @@ class UsuariosController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $this->email($model, $model->email);
+            return;
         }
 
         return $this->render('create', [
@@ -144,12 +145,14 @@ class UsuariosController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionEmail()
+    public function email($model, $userMail)
     {
-        if (Yii::$app->mailer->compose('home-link')
+        if (Yii::$app->mailer->compose('home-link', [
+            'model' => $model,
+        ])
             ->setFrom('muevememb@gmail.com')
-            ->setTo('manu.a.bachi@gmail.com')
-            ->setSubject('Prueba de correo')
+            ->setTo($userMail)
+            ->setSubject('Confirmar cuenta')
             //->setTextBody('Esto es una prueba.')
             //->setHtmlBody('<h1>Esto es una prueba</h1>')
             ->send()) {
@@ -174,5 +177,24 @@ class UsuariosController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionValidar()
+    {
+        $usuarios = Yii::$app->request->post('Usuarios');
+        extract($usuarios);
+        $usuario = Usuarios::find()->where(['nombre' => $nombre])->one();
+
+        if (isset($usuario)) {
+            $usuario->confirm = true;
+            if ($usuario->save()) {
+                Yii::$app->session->setFlash('success', 'Has validado tu cuenta correctamente.');
+            } else {
+                Yii::$app->session->setFlash('error', 'No se ha podido validad su cuenta.');
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'No se encuentra su usuario.');
+        }
+        return $this->redirect(['site/index']);
     }
 }

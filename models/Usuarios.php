@@ -42,10 +42,13 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
         return [
            [['nombre'], 'required'],
            [['nombre'], 'string', 'max' => 50],
-           [['nombre'], 'unique'],
+           [['nombre', 'email'], 'unique'],
            [['password', 'password_repeat'], 'required', 'on' => [self::SCENARIO_CREATE]],
            [['password_repeat'], 'safe', 'on' => [self::SCENARIO_UPDATE]],
            [['password'], 'compare', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE]],
+           [['email'], 'email', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE]],
+           [['email'], 'unique', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE]],
+           [['confirm'], 'safe'],
         ];
     }
 
@@ -184,5 +187,15 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
             }
         }
         return true;
+    }
+    /**
+     * Finds user by nombre.
+     *
+     * @param string $nombre
+     * @return static|null
+     */
+    public static function findByUsername($nombre)
+    {
+        return static::findOne(['nombre' => $nombre]);
     }
 }
