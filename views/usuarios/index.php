@@ -27,6 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'nombre',
+            'email',
+            'confirm:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
