@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Comentarios;
 use app\models\ComentariosSearch;
+use app\models\Usuarios;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -76,9 +77,14 @@ class ComentariosController extends Controller
     public function actionCreate()
     {
         $model = new Comentarios();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['noticias/view', 'id' => $model->noticia_id]);
+        $usuario = Usuarios::findOne(['id' => Yii::$app->user->id]);
+        if ($usuario->confirm == true) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['noticias/view', 'id' => $model->noticia_id]);
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Para comentar una notica debe validar su cuenta.');
+            return $this->redirect(['site/index']);
         }
 
         return $this->render('create', [
@@ -138,10 +144,16 @@ class ComentariosController extends Controller
     public function actionResponder()
     {
         $model = new Comentarios();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['noticias/view', 'id' => $model->noticia_id]);
+        $usuario = Usuarios::findOne(['id' => Yii::$app->user->id]);
+        if ($usuario->confirm == true) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['noticias/view', 'id' => $model->noticia_id]);
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Para responder un comentario debe validar su cuenta.');
+            return $this->redirect(['noticias/index']);
         }
+
 
         return $this->render('create', [
            'model' => $model,

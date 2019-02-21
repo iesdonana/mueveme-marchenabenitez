@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Comentarios;
 use app\models\Noticias;
 use app\models\NoticiasSearch;
+use app\models\Usuarios;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
@@ -113,9 +114,14 @@ class NoticiasController extends Controller
 
         $model->usuario_id = Yii::$app->user->id;
         $model->created_at = new Expression('NOW()');
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $usuario = Usuarios::findOne(['id' => Yii::$app->user->id]);
+        if ($usuario->confirm == true) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } else {
+            Yii::$app->session->setFlash('error', 'Para crear una notica debe validar su cuenta.');
+            return $this->redirect(['noticias/index']);
         }
 
         return $this->render('create', [

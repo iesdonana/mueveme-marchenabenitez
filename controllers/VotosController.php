@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Usuarios;
 use app\models\Votos;
 use app\models\VotosSearch;
 use Yii;
@@ -146,15 +147,20 @@ class VotosController extends Controller
             Yii::$app->session->setFlash('warning', 'Ya has votado este comentario');
             return $this->redirect(['/noticias/view', 'id' => $voto->comentario->noticia_id]);
         }
-        $voto = new Votos([
-                   'comentario_id' => $comentario_id,
-                   'usuario_id' => $usuario_id,
-                   'voto' => $tipoVoto,
+        $usuario = Usuarios::findOne(['id' => Yii::$app->user->id]);
+        if ($usuario->confirm == true) {
+            $voto = new Votos([
+                'comentario_id' => $comentario_id,
+                'usuario_id' => $usuario_id,
+                'voto' => $tipoVoto,
             ]);
 
-        if (!$voto->save()) {
-            Yii::$app->session->setFlash('error', 'No se ha podido registrar su voto');
+            if (!$voto->save()) {
+                Yii::$app->session->setFlash('error', 'No se ha podido registrar su voto');
+            }
+            return $this->redirect(['/noticias/view', 'id' => $voto->comentario->noticia_id]);
         }
-        return $this->redirect(['/noticias/view', 'id' => $voto->comentario->noticia_id]);
+        Yii::$app->session->setFlash('error', 'Para votar un comentario debe validar su cuenta.');
+        return $this->redirect(['noticias/index']);
     }
 }
