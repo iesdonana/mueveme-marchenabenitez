@@ -20,10 +20,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'link')->textInput(['maxlength' => true])->label('URL') ?>
 
-
-
-
-
     <?= $form->field($model, 'categoria_id')->widget(Select2::classname(), [
             'data' => \app\models\Categorias::find()
                             ->select('categoria')
@@ -36,7 +32,7 @@ use yii\widgets\ActiveForm;
         ]);
     ?>
 
-    <?= $form->field($model, 'imageFile')->fileInput() ?>
+    <?= $form->field($model, 'imageFile')->fileInput()->label('Imagen') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
