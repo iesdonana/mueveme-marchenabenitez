@@ -5,7 +5,6 @@ namespace app\controllers;
 use app\models\Comentarios;
 use app\models\Noticias;
 use app\models\NoticiasSearch;
-use app\models\UploadForm;
 use Yii;
 use yii\db\Expression;
 use yii\filters\AccessControl;
@@ -79,19 +78,6 @@ class NoticiasController extends Controller
             'model' => $this->findModel($id),
             'comentarios' => $this->buscaComentarios($id),
         ]);
-    }
-
-    public function actionSubir()
-    {
-        $model = new UploadForm();
-        if (Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return $this->redirect(['site/index']);
-            }
-        }
-        return $this->render('subir', ['model' => $model]);
     }
 
     /**
