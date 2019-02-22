@@ -43,6 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-offset-1 col-lg-11">
             <?= Html::a('Olvidé mi contraseña', ['usuarios/recuperarcontrasenya'], ['class' => 'btn btn-info']) ?>
+            <?= Html::a('Olvidé mi nick', ['usuarios/recuperarusuario'], ['class' => 'btn btn-info']) ?>
         </div>
     </div>
 </div>

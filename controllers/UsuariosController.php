@@ -178,7 +178,25 @@ class UsuariosController extends Controller
         } else {
             Yii::$app->session->setFlash('error', 'Ha habido un error al mandar el correo.');
         }
-        return $this->redirect(['noticias/index']);
+        return $this->redirect(['site/index']);
+    }
+
+    public function emailUsuario($model, $userMail)
+    {
+        if (Yii::$app->mailer->compose('usuario', [
+            'model' => $model,
+        ])
+            ->setFrom('muevememb@gmail.com')
+            ->setTo($userMail)
+            ->setSubject('Usuario de Mueveme')
+            //->setTextBody('Esto es una prueba.')
+            //->setHtmlBody('<h1>Esto es una prueba</h1>')
+            ->send()) {
+            Yii::$app->session->setFlash('success', 'Se ha enviado correctamente.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Ha habido un error al mandar el correo.');
+        }
+        return $this->redirect(['site/index']);
     }
 
     /**
@@ -247,5 +265,18 @@ class UsuariosController extends Controller
         return $this->render('cambiarcontrasenya', [
             'model' => $usuario,
         ]);
+    }
+
+    public function actionRecuperarusuario()
+    {
+        if ($email = Yii::$app->request->post('email')) {
+            $usuario = Usuarios::findOne(['email' => $email]);
+            if (isset($usuario)) {
+                $this->emailUsuario($usuario, $email);
+            } else {
+                Yii::$app->session->setFlash('error', 'El email no es correcto.');
+            }
+        }
+        return $this->render('recuperarusuario');
     }
 }
