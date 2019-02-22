@@ -93,8 +93,9 @@ class NoticiasController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                $model->save();
+            if ($model->save()) {
+                $fileName = Yii::getAlias('@uploads/' . $model->id . '.' . $model->imageFile->extension);
+                $model->imageFile->saveAs($fileName, $deleteTempFile = false);
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }

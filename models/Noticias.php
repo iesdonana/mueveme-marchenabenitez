@@ -2,10 +2,6 @@
 
 namespace app\models;
 
-use Imagine\Gd\Imagine;
-use Imagine\Image\Box;
-use Yii;
-
 /**
  * This is the model class for table "noticias".
  *
@@ -74,15 +70,7 @@ class Noticias extends \yii\db\ActiveRecord
 
     public function upload()
     {
-        if ($this->validate()) {
-            $fileName = Yii::getAlias('@uploads/' . Yii::$app->user->id . '-' . date('j:H:m:s') . '.' . $this->imageFile->extension);
-            $this->imageFile->saveAs($fileName, $deleteTempFile = false);
-            $imagine = new Imagine();
-            $image = $imagine->open($fileName);
-            $image->resize(new Box(400, 400))->save($fileName);
-            return true;
-        }
-        return false;
+        return $this->validate();
     }
 
     /**
