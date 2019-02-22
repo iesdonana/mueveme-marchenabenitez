@@ -147,12 +147,48 @@ class UsuariosController extends Controller
 
     public function email($model, $userMail)
     {
-        if (Yii::$app->mailer->compose('home-link', [
+        if (Yii::$app->mailer->compose('validar', [
             'model' => $model,
         ])
             ->setFrom('muevememb@gmail.com')
             ->setTo($userMail)
             ->setSubject('Confirmar cuenta')
+            //->setTextBody('Esto es una prueba.')
+            //->setHtmlBody('<h1>Esto es una prueba</h1>')
+            ->send()) {
+            Yii::$app->session->setFlash('success', 'Se ha enviado correctamente.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Ha habido un error al mandar el correo.');
+        }
+        return $this->redirect(['site/index']);
+    }
+
+    public function emailContra($model, $userMail)
+    {
+        if (Yii::$app->mailer->compose('contrasenya', [
+            'model' => $model,
+        ])
+            ->setFrom('muevememb@gmail.com')
+            ->setTo($userMail)
+            ->setSubject('Recuperar contraseña de Mueveme')
+            //->setTextBody('Esto es una prueba.')
+            //->setHtmlBody('<h1>Esto es una prueba</h1>')
+            ->send()) {
+            Yii::$app->session->setFlash('success', 'Se ha enviado correctamente.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Ha habido un error al mandar el correo.');
+        }
+        return $this->redirect(['site/index']);
+    }
+
+    public function emailUsuario($model, $userMail)
+    {
+        if (Yii::$app->mailer->compose('usuario', [
+            'model' => $model,
+        ])
+            ->setFrom('muevememb@gmail.com')
+            ->setTo($userMail)
+            ->setSubject('Usuario de Mueveme')
             //->setTextBody('Esto es una prueba.')
             //->setHtmlBody('<h1>Esto es una prueba</h1>')
             ->send()) {
@@ -196,5 +232,51 @@ class UsuariosController extends Controller
             Yii::$app->session->setFlash('error', 'No se encuentra su usuario.');
         }
         return $this->redirect(['site/index']);
+    }
+
+    public function actionRecuperarcontrasenya()
+    {
+        if ($email = Yii::$app->request->post('email')) {
+            $usuario = Usuarios::findOne(['email' => $email]);
+            if (isset($usuario)) {
+                $this->emailContra($usuario, $email);
+            } else {
+                Yii::$app->session->setFlash('error', 'El email no es correcto.');
+            }
+        }
+        return $this->render('recuperarcontrasenya');
+    }
+
+    public function actionCambiarcontrasenya()
+    {
+        $usuarios = Yii::$app->request->post('Usuarios');
+        extract($usuarios);
+        $usuario = Usuarios::find()->where(['nombre' => $nombre])->one();
+        $usuario->scenario = Usuarios::SCENARIO_UPDATE;
+        if (Yii::$app->request->isAjax && $usuario->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($usuario);
+        }
+        if ($usuario->load(Yii::$app->request->post()) && $usuario->save()) {
+            Yii::$app->session->setFlash('success', 'Se ha modificado su contraseña correctamente.');
+            return $this->redirect(['noticias/index']);
+        }
+        $usuario->password = $usuario->password_repeat = '';
+        return $this->render('cambiarcontrasenya', [
+            'model' => $usuario,
+        ]);
+    }
+
+    public function actionRecuperarusuario()
+    {
+        if ($email = Yii::$app->request->post('email')) {
+            $usuario = Usuarios::findOne(['email' => $email]);
+            if (isset($usuario)) {
+                $this->emailUsuario($usuario, $email);
+            } else {
+                Yii::$app->session->setFlash('error', 'El email no es correcto.');
+            }
+        }
+        return $this->render('recuperarusuario');
     }
 }
