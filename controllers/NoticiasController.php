@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Comentarios;
 use app\models\Noticias;
 use app\models\NoticiasSearch;
+use app\models\UploadForm;
 use Yii;
 use yii\db\Expression;
 use yii\filters\AccessControl;
@@ -51,20 +52,6 @@ class NoticiasController extends Controller
         ];
     }
 
-    public function actionSubir()
-    {
-        $model = new Noticias();
-        if (Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return $this->redirect(['site/index']);
-            }
-        }
-        return $this->render('_form', ['model' => $model]);
-    }
-
-
     /**
      * Lists all Noticias models.
      * @return mixed
@@ -94,6 +81,19 @@ class NoticiasController extends Controller
         ]);
     }
 
+    public function actionSubir()
+    {
+        $model = new UploadForm();
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                return $this->redirect(['site/index']);
+            }
+        }
+        return $this->render('subir', ['model' => $model]);
+    }
+
     /**
      * Creates a new Noticias model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -102,14 +102,15 @@ class NoticiasController extends Controller
     public function actionCreate()
     {
         $model = new Noticias();
-
         $model->usuario_id = Yii::$app->user->id;
         $model->created_at = new Expression('NOW()');
-        $path = $model->id;
-        $model->imageFile->saveAs($path);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
