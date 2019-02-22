@@ -31,7 +31,9 @@ class Noticias extends \yii\db\ActiveRecord
         return 'noticias';
     }
 
+
     public $imageFile;
+
     /**
      * {@inheritdoc}
      */
@@ -51,19 +53,6 @@ class Noticias extends \yii\db\ActiveRecord
         ];
     }
 
-    public function upload()
-    {
-        if ($this->validate()) {
-            $fileName = Yii::getAlias('@uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
-            $this->imageFile->saveAs($fileName);
-            $imagine = new \Imagine\Gd\Imagine();
-            $image = $imagine->open($fileName);
-            $image->resize(new \Imagine\Image\Box(400, 200))->save($fileName);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -79,6 +68,19 @@ class Noticias extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'imageFile' => 'Imagen',
         ];
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $fileName = Yii::getAlias('@uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->imageFile->saveAs($fileName, $deleteTempFile = false);
+            // $imagine = new \Imagine\Gd\Imagine();
+            // $image = $imagine->open($fileName);
+            // $image->resize(new \Imagine\Image\Box(400, 200))->save($fileName);
+            return true;
+        }
+        return false;
     }
 
     /**
