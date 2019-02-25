@@ -5,6 +5,9 @@ namespace app\controllers;
 use app\models\Comentarios;
 use app\models\Noticias;
 use app\models\NoticiasSearch;
+use League\Flysystem\Filesystem;
+use Spatie\Dropbox\Client;
+use Spatie\FlysystemDropbox\DropboxAdapter;
 use Yii;
 use yii\db\Expression;
 use yii\filters\AccessControl;
@@ -90,6 +93,10 @@ class NoticiasController extends Controller
         $model = new Noticias();
         $model->usuario_id = Yii::$app->user->id;
         $model->created_at = new Expression('NOW()');
+        $authorizationToken = 'xGZm6R8tGv8AAAAAAAAu5Z0fpfkx68D_sLA2L-GkpepuTEgSHar39xbOA1hoNKro';
+        $client = new Client($authorizationToken);
+        $adapter = new DropboxAdapter($client);
+        $filesystem = new Filesystem($adapter);
 
         if ($model->load(Yii::$app->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
@@ -99,6 +106,9 @@ class NoticiasController extends Controller
                 $imagine = new \Imagine\Gd\Imagine();
                 $image = $imagine->open($fileName);
                 $image->resize(new \Imagine\Image\Box(130, 100))->save($fileName);
+                $client->upload($fileName, file_get_contents($fileName), 'overwrite');
+                $res = $client->createSharedLinkWithSettings($filename, ['requested_visibility' => 'public']);
+                // En $res[‘url’] está la URL con el enlace compartido.
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }

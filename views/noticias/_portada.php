@@ -3,8 +3,7 @@
 use yii\helpers\Html;
 
 $url = explode("/", $model->link);
-$creado = Yii::$app->formatter->asDateTime($model->created_at, "short")
-
+$creado = Yii::$app->formatter->asDateTime($model->created_at, "short");
 ?>
 
 <div class="container">
