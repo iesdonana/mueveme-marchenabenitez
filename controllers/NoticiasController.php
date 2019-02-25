@@ -107,7 +107,7 @@ class NoticiasController extends Controller
                 $image = $imagine->open($fileName);
                 $image->resize(new \Imagine\Image\Box(130, 100))->save($fileName);
                 $client->upload($fileName, file_get_contents($fileName), 'overwrite');
-                $res = $client->createSharedLinkWithSettings($filename, ['requested_visibility' => 'public']);
+                $res = $client->createSharedLinkWithSettings('/' . $fileName, ['requested_visibility' => 'public']);
                 // En $res[‘url’] está la URL con el enlace compartido.
                 return $this->redirect(['view', 'id' => $model->id]);
             }
