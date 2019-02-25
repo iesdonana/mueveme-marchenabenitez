@@ -93,10 +93,7 @@ class NoticiasController extends Controller
         $model = new Noticias();
         $model->usuario_id = Yii::$app->user->id;
         $model->created_at = new Expression('NOW()');
-        $authorizationToken = 'xGZm6R8tGv8AAAAAAAAu5Z0fpfkx68D_sLA2L-GkpepuTEgSHar39xbOA1hoNKro';
-        $client = new Client($authorizationToken);
-        $adapter = new DropboxAdapter($client);
-        $filesystem = new Filesystem($adapter);
+
 
         if ($model->load(Yii::$app->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
@@ -106,8 +103,9 @@ class NoticiasController extends Controller
                 $imagine = new \Imagine\Gd\Imagine();
                 $image = $imagine->open($fileName);
                 $image->resize(new \Imagine\Image\Box(130, 100))->save($fileName);
-                $client->upload($fileName, file_get_contents($fileName), 'overwrite');
-                $res = $client->createSharedLinkWithSettings('/' . $fileName, ['requested_visibility' => 'public']);
+                $res = $this->dropbox($fileName);
+                $res->createSharedLinkWithSettings('/' . $fileName, ['requested_visibility' => 'public']);
+
                 // En $res[‘url’] está la URL con el enlace compartido.
                 return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -137,6 +135,7 @@ class NoticiasController extends Controller
                 $imagine = new \Imagine\Gd\Imagine();
                 $image = $imagine->open($fileName);
                 $image->resize(new \Imagine\Image\Box(130, 100))->save($fileName);
+                $this->dropbox($fileName);
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -184,5 +183,18 @@ class NoticiasController extends Controller
             ]
         )->all();
         return $comentarios;
+    }
+
+    private function dropbox($file = null)
+    {
+        $authorizationToken = 'xGZm6R8tGv8AAAAAAAAu5Z0fpfkx68D_sLA2L-GkpepuTEgSHar39xbOA1hoNKro';
+        $client = new Client($authorizationToken);
+        $adapter = new DropboxAdapter($client);
+        $filesystem = new Filesystem($adapter);
+        if ($file != null) {
+            $client->upload($file, file_get_contents($file), 'overwrite');
+        }
+
+        return $client;
     }
 }
