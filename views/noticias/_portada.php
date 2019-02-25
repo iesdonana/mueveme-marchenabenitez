@@ -1,9 +1,13 @@
 <?php
 // _list_item.php
 use yii\helpers\Html;
+use Spatie\Dropbox\Client;
+
 
 $url = explode("/", $model->link);
 $creado = Yii::$app->formatter->asDateTime($model->created_at, "short");
+$authorizationToken = 'xGZm6R8tGv8AAAAAAAAu5Z0fpfkx68D_sLA2L-GkpepuTEgSHar39xbOA1hoNKro';
+$client = new Client($authorizationToken);
 ?>
 
 <div class="container">
@@ -36,7 +40,9 @@ $creado = Yii::$app->formatter->asDateTime($model->created_at, "short");
                 </div>
                 <div class="col-xs-1">
                     <br />
-                    <?= Html::img('uploads/' . $model->id . ".png", ['alt' => "Imagen no encontrada"]) ?>
+                    <?=
+                        Html::img($client->getTemporaryLink('uploads/' . $model->id . '.png'))
+                    ?>
                 </div>
             </div>
         </div>
