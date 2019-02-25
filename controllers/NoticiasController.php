@@ -96,6 +96,9 @@ class NoticiasController extends Controller
             if ($model->save()) {
                 $fileName = Yii::getAlias('@uploads/' . $model->id . '.' . $model->imageFile->extension);
                 $model->imageFile->saveAs($fileName, $deleteTempFile = false);
+                $imagine = new \Imagine\Gd\Imagine();
+                $image = $imagine->open($fileName);
+                $image->resize(new \Imagine\Image\Box(130, 100))->save($fileName);
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -116,8 +119,16 @@ class NoticiasController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->save()) {
+                $fileName = Yii::getAlias('@uploads/' . $model->id . '.' . $model->imageFile->extension);
+                $model->imageFile->saveAs($fileName, $deleteTempFile = false);
+                $imagine = new \Imagine\Gd\Imagine();
+                $image = $imagine->open($fileName);
+                $image->resize(new \Imagine\Image\Box(130, 100))->save($fileName);
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
