@@ -5,9 +5,10 @@ DROP TABLE IF EXISTS usuarios CASCADE;
 
 CREATE TABLE usuarios
 (
-    id       BIGSERIAL   PRIMARY KEY
-  , nombre   VARCHAR(32) NOT NULL UNIQUE
-  , password VARCHAR(60) NOT NULL
+    id           BIGSERIAL    PRIMARY KEY
+  , nombre       VARCHAR(32)  NOT NULL UNIQUE
+  , password     VARCHAR(60)  NOT NULL
+  , created_at   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS categorias CASCADE;
